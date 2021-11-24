@@ -1,16 +1,26 @@
 /*
   creates #runs events per bin time series from random Poisson process
     from eventspertime.dat file of event info
+
   PARAMETERS: frequency, relative amplitude, start time, and duration
+  
   calculates #runs "SASI meter" (likelihood ratio=L(alternative)/L(null)) values from series
+
+  TERMINOLOGY:
+  givenS: given SASI oscillations
+  givenNS: given no SASI oscillations
+  
   saves SM values in SMvals.dat with format:
-   lnSMgivenS lnSMgivenNS fsbestgivenS abestgivenS fsbestgivenNS abestgivenNS
+    lnSMgivenS lnSMgivenNS fsbestgivenS abestgivenS fsbestgivenNS abestgivenNS
   saves start times in tstart.dat with format:
-   tstartgivenS tstartgivenNS
+    tstartgivenS tstartgivenNS
+  saves duration times in tdur.dat with format:
+    tdurgivenS tdurgivenNS
+  
   generated no-SASI model is big-binned spline of moving avg'd SASI model
   template method:
-   null-template: smoothed big-binning of moving-avg'd data
-   2p-template: injected sinusoid over smoothed signal
+    null-template: smoothed big-binning of moving-avg'd data
+    2p-template: injected sinusoid over smoothed signal
 
 V4: modified to allow for larger event rates and oscillation amplitudes:
     when Bessel fn input is too high, asymptotic form is used.
@@ -265,7 +275,11 @@ void sasimeterruns_tstart_tdur_v4(){
 /*
     tdurfn (function):
         inputs: SASI duration (# pts in fft), shot-noised sasi, no-sasi models, 
-                time array, input_array[4] (NEEDED: EXPLAIN WHATS IN THIS ARRAY)
+                time array, input_array[3]
+                    input_array[0]: index of first start time
+                    input_array[1]: index of earliest possible start time
+                    input_array[2]: number of start times
+
         outputs: lnSMgivenS and lnSMgivenNS maximized with respect
                 to frequency, rel amp, start time 
                 
